@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catalog Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <h1>Catalog Management</h1>
+      <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="actions">
+      <input type="text" id="searchInput" placeholder="Search by ID or Name">
+      <select id="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+      <button onclick="applyFilter()">Search</button>
+      <button onclick="showForm('create')">Create Catalog</button>
+    </div>
+
+    <!-- Catalog Table -->
+    <table id="catalogTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="catalogTableBody">
+        <!-- Populated dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div id="paginationControls"></div>
+
+    <!-- Forms -->
+    <div class="forms-grid">
+
+      <!-- Create Catalog Form -->
+      <div class="form-section" id="createForm">
+        <h3>Create Catalog</h3>
+        <input type="text" id="createName" placeholder="Catalog Name" required>
+        <input type="text" id="createDesc" placeholder="Catalog Description" required>
+        <input type="datetime-local" id="createStart">
+        <input type="datetime-local" id="createEnd">
+        <select id="createStatus">
+          <option value="">Select Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <button onclick="handleCreate(event)">Create Catalog</button>
+      </div>
+
+      <!-- Update Catalog Form -->
+      <div class="form-section" id="updateForm" style="display: none;">
+        <h3>Update Catalog</h3>
+        <input type="hidden" id="updateId">
+        <input type="text" id="updateName" placeholder="Catalog Name">
+        <input type="text" id="updateDesc" placeholder="Catalog Description">
+        <input type="datetime-local" id="updateStart">
+        <input type="datetime-local" id="updateEnd">
+        <select id="updateStatus">
+          <option value="">Select Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <button onclick="handleUpdate(event)">Update Catalog</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

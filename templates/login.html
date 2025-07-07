@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #edcafe, #edcafe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      background: #ffffffcc;
+      padding: 3.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 2rem;
+      letter-spacing: 0.06em;
+      font-size: 2.25rem;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 1.15rem 1rem;
+      margin: 1rem 0;
+      border: 2px solid #d761ff;
+      border-radius: 15px;
+      font-size: 1.15rem;
+      transition: border-color 0.3s ease;
+      outline-offset: 2px;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #d761ff;
+      box-shadow: 0 0 8px #d761ff;
+    }
+
+    button {
+      width: 100%;
+      padding: 1.25rem;
+      background-color: #f2d1fd;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.07em;
+      transition: background-color 0.25s ease;
+      user-select: none;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: #d761ff;
+      box-shadow: 0 8px 15px #d761ff;
+    }
+
+    #error {
+      color: #e63946;
+      margin-top: 1.25rem;
+      font-size: 1rem;
+      min-height: 1.2rem;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" autocomplete="username" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+    <button onclick="handleLogin()">Login</button>
+    <p id="error"></p>
+  </div>
+
+  <!-- ✅ LOGIN SCRIPT -->
+  <script>
+    async function handleLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorBox = document.getElementById("error");
+
+      if (!username || !password) {
+        errorBox.textContent = "Please enter username and password.";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.token) {
+          localStorage.setItem("token", result.token);
+          window.location.href = "/home";
+        } else {
+          errorBox.textContent = result.message || "Login failed.";
+        }
+      } catch (err) {
+        errorBox.textContent = "Something went wrong. Please try again.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

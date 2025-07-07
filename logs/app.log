@@ -1,0 +1,12 @@
+2025-07-07 17:45:28,736 - INFO - Login attempt by user: admin
+2025-07-07 17:45:29,022 - INFO - User 'admin' authenticated successfully
+2025-07-07 17:45:29,023 - INFO - Login successful for user: admin
+2025-07-07 17:45:29,194 - INFO - Fetched catalogs (page=1, size=5, search=, status=)
+2025-07-07 17:45:29,194 - INFO - Catalogs fetched. Count: 5 Page: 1
+2025-07-07 19:03:30,525 - INFO - User 'admin' authenticated successfully
+2025-07-07 19:03:30,559 - ERROR - Error creating catalog: property 'lastrowid' of 'CMySQLCursorDict' object has no setter
+2025-07-07 19:03:30,705 - ERROR - Error closing DB connection in destructor: weakly-referenced object no longer exists
+2025-07-07 19:05:44,912 - INFO - User 'admin' authenticated successfully
+2025-07-07 19:05:44,917 - INFO - Catalog created with ID 1
+2025-07-07 19:07:49,383 - INFO - User 'admin' authenticated successfully
+2025-07-07 19:07:49,387 - INFO - Catalog created with ID 1
