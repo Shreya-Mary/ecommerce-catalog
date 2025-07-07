@@ -6,6 +6,7 @@ from service.catalog_service import CatalogService
 from dto.catalog import Catalog
 from util.logger import logger
 
+
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "your-secret-key"
 jwt = JWTManager(app)

@@ -1,40 +1,35 @@
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from service.catalog_service import CatalogService
 from dto.catalog import Catalog
-
-class MockCursor:
-    def __init__(self):
-        self.lastrowid = 1
-    def execute(self, query, params):
-        pass
-    def close(self):
-        pass
-    def fetchall(self):
-        return []
-    def fetchone(self):
-        return {"total": 0}
-
-class MockConnection:
-    def cursor(self, dictionary=True):
-        return MockCursor()
-    def commit(self):
-        pass
-    def close(self):
-        pass
+from service.catalog_service import CatalogService
 
 def test_create_catalog(monkeypatch):
-    # Mock DB connection
-    monkeypatch.setattr("service.catalog_service.get_connection", lambda: MockConnection())
-
     service = CatalogService()
-    catalog = Catalog("Test Cat", "Test Desc", "2025-07-01 10:00", "2025-07-05 18:00", "Active")
+
+    catalog = Catalog(
+        name="Test Catalog",
+        description="Test Description",
+        start_date="2025-07-01 10:00",
+        end_date="2025-07-05 18:00",
+        status="Active"
+    )
+
+    # Mock cursor.execute to simulate DB insert
+    def mock_execute(query, params):
+        pass  # do nothing
+
+    # Mock connection commit
+    def mock_commit():
+        pass
+
+    # Mock lastrowid manually
+    service.cursor.execute = mock_execute
+    service.conn.commit = mock_commit
+    service.cursor.lastrowid = 1
 
     result = service.create_catalog(catalog)
-
     assert result["id"] == 1
-    assert result["name"] == "Test Cat"
+    assert result["name"] == "Test Catalog"
+
+
 
 
