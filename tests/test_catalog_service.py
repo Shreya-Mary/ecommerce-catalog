@@ -1,35 +1,104 @@
-
+import pytest
 from dto.catalog import Catalog
 from service.catalog_service import CatalogService
 
-def test_create_catalog(monkeypatch):
-    service = CatalogService()
-
-    catalog = Catalog(
-        name="Test Catalog",
-        description="Test Description",
-        start_date="2025-07-01 10:00",
-        end_date="2025-07-05 18:00",
-        status="Active"
+@pytest.fixture
+def catalog_obj():
+    return Catalog(
+        "Test Catalog",
+        "Test Description",
+        "2025-07-01 10:00",
+        "2025-07-05 18:00",
+        "Active"
     )
 
-    # Mock cursor.execute to simulate DB insert
-    def mock_execute(query, params):
-        pass  # do nothing
+# Test function for creating a catalog
+def test_create_catalog(monkeypatch, catalog_obj):
+    service = CatalogService()
 
-    # Mock connection commit
-    def mock_commit():
-        pass
+    # Mock cursor with lastrowid
+    class MockCursor:
+        def __init__(self):
+            self.lastrowid = 1
 
-    # Mock lastrowid manually
-    service.cursor.execute = mock_execute
-    service.conn.commit = mock_commit
-    service.cursor.lastrowid = 1
+        def execute(self, query, params):
+            pass
 
-    result = service.create_catalog(catalog)
+        def close(self):
+            pass
+
+    # Mock connection with commit
+    class MockConnection:
+        def commit(self):
+            pass
+
+        def close(self):
+            pass
+
+    # Inject mocks into the service
+    service.cursor = MockCursor()
+    service.conn = MockConnection()
+
+    # Perform the create operation
+    result = service.create_catalog(catalog_obj)
+
+    # Assertions
     assert result["id"] == 1
     assert result["name"] == "Test Catalog"
 
+def test_create_catalog(monkeypatch, catalog_obj):
+    service = CatalogService()
 
+    class MockCursor:
+        def __init__(self):
+            self.lastrowid = 1
 
+        def execute(self, query, params):
+            pass
+
+        def close(self):
+            pass
+
+    class MockConnection:
+        def commit(self):
+            pass
+
+        def close(self):
+            pass
+
+    # Inject mocks
+    service.cursor = MockCursor()
+    service.conn = MockConnection()
+
+    result = service.create_catalog(catalog_obj)
+
+    assert result["id"] == 1
+    assert result["name"] == "Test Catalog"
+
+def test_update_catalog(monkeypatch):
+    service = CatalogService()
+
+    # Mock execute and commit
+    monkeypatch.setattr(service.cursor, "execute", lambda query, params: None)
+    monkeypatch.setattr(service.conn, "commit", lambda: None)
+
+    result = service.update_catalog_by_id(
+        catalog_id=1,
+        name="Updated",
+        description="Updated Desc",
+        start_date="2025-07-01 10:00",
+        end_date="2025-07-05 18:00",
+        status="Inactive"
+    )
+    assert result["message"] == "Catalog updated successfully"
+
+def test_delete_catalog(monkeypatch):
+    service = CatalogService()
+
+    # Mock execute and commit
+    monkeypatch.setattr(service.cursor, "execute", lambda query, params: None)
+    monkeypatch.setattr(service.conn, "commit", lambda: None)
+
+    result = service.delete_catalog_by_id(1)
+    assert result["message"] == "Catalog deleted successfully"
 
